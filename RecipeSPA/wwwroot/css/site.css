@@ -15,6 +15,18 @@ html {
 
 body {
 }
+.home-title {
+    padding-right: 100px;
+    padding-top: 305px;
+}
+.c-title-font {
+    font-family: 'Kaushan Script', cursive;
+   
+}
+
+.c-description-font {
+    font-family: 'DM Serif Display', serif;
+}
 
 .c-header {
     position: sticky;
@@ -69,23 +81,6 @@ body {
         color: #F2D349;
 
 }
-.c-category-row {
-    background-color: #8AA899;
-    min-height: 15%;
-    border-radius: 15px;
-    filter: drop-shadow(3px 3px 4px grey);
-    display: flex;
-    align-items: center;
-    transition: transform 1s;
-}
-
-.c-category-details-div {
-    margin-right: 5%;
-    margin-left: 4%;
-    padding-right: 3px;
-    cursor: pointer;
-    color: white;
-}
 
 .c-category-details-div:hover {
         color: #F2D349;
@@ -113,16 +108,9 @@ body {
     margin-left: 4%;
     padding-right: 3px;
     cursor: pointer;
-    color: white;
+    color: black;
 }
 
-.c-category-back-div {
-    margin-right: 5%;
-    margin-left: 4%;
-    padding-right: 3px;
-    cursor: pointer;
-    color: white;
-}
 
 .c-category-remove-div:hover {
     cursor: pointer;
@@ -140,11 +128,14 @@ body {
     color: #F2D349;
 }
 
-.c-category-back-div:hover {
-    cursor: pointer;
-    color: #F2D349;
-}
 
+.recipe-title {
+    color: #000000;
+    font-weight:500;
+}
+.recipe-title:hover {
+        color: #F2D349;
+ }
 
 .recipe-ing-ins {
     color: #7f2e4d;
@@ -154,16 +145,24 @@ body {
     background-color: #7f2e4d;
 }
 
-.c-button-row {
-    display: flex;
-    align-items: center;
-    align-content: center;
-    padding-left: 60px;
+.card {
+    background-color: #8AA899;
+    border-radius: 15px;
+}
+.c-cancel-button {
+    background-color: none;
+    border-radius: 40px;
+    border-color: #F2D349;
 }
 
-.recipe-title {
-    color: #7f2e4d;
+.c-confirm-button {
+    border-radius: 40px;
+    color: white;
+    background-color: #F2D349;
 }
+
+
+
 
 
 .c-categories-container-recipe {
@@ -178,32 +177,18 @@ body {
     color: #3d0633
 }
 
-.c-cancel-button {
-    background-color: none;
-    border-radius: 40px;
-    border-color: #490B3D;
-}
 
 .c-categories-container-recipe {
     text-align: start;
     font-size: 15px;
 }
 
-.c-confirm-button {
-    border-radius: 40px;
-    color: white;
-    background-color: #490B3D;
-}
+
+
 
 .c-category-btn {
     border-radius: 25px;
     font-weight: 800
-}
-
-
-
-.c-card-div {
-    background-color: whitesmoke !important;
 }
 
 .c-recipe-details-page {
@@ -275,7 +260,7 @@ c-delete-modal-title-recipe {
 
 .c-delete-trash {
     border-radius: 50%;
-    border-color: #490b3d;
+    border-color: #F2D349;
     border-style: solid;
     width: 70px;
     text-align: center
@@ -290,7 +275,7 @@ c-delete-modal-title-recipe {
 }
 
 .c-cancel-delete {
-    border-color: #490b3d;
+    border-color: #F2D349;
     padding: 0.4rem 1rem;
 }
 

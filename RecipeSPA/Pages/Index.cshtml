@@ -1,160 +1,384 @@
-﻿
-@page
+﻿@page
 @model IndexModel
 @using Microsoft.Extensions.Configuration
 @inject IConfiguration Configuration
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
 @{
-	ViewData["Title"] = "A Winning Dish";
+	ViewData["Title"] = "A Winnig Dish";
+	var requestToken = Antiforgery.GetAndStoreTokens(HttpContext).RequestToken;
 }
-@* Recipes Tab *@
+<body style="background-image: url('../images/background7.jpg'); background-repeat:no-repeat; background-size:cover;">
+<input id="X-XSRF-TOKEN" type="hidden" value="@requestToken" />
+<div x-show="tab == 'home'">
+	<div class="home-title">
+		<h1 class="display-1 mt-5 c-title-font c-white-font">A Winning Dish</h1>
+	    <h2 class="c-description-font mb-5">A recipe is a story that ends with a good meal.</h2>
+	</div>
+	 
+</div>
 <div x-show="tab == 'recipes'">
 	<div class="container d-flex justify-content-between align-items-center my-4">
-		<h2 class="c-font">All Recipes</h2>
-		<button type="button" class="btn c-Add-button"  data-bs-toggle="modal" data-bs-target="#createModal">
+		<h2>All Recipes</h2>
+		<button type="button" class="btn c-Add-button" data-bs-toggle="modal" data-bs-target="#createRecipeModal">
 			Add a Recipe
-			  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="color:white" class="bi bi-plus-square" viewBox="0 0 16 16">
-                    <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
-                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-               </svg>
 		</button>
 	</div>
+
+	@* Recipe Cards *@
 	<div x-data="{recipes: []}"
 		 x-effect="recipes = await $store.recipes;"
-		 x-cloak>
+		 x-cloak
+		 class="row row-cols-auto justify-content-center g-4 mx-5 d-flex flex-column mb-3">
 		<template x-for="recipe in recipes">
-	        <div class="c-category-row my-4 mx-5">
-			    <div class="c-category-text-div  ">
-			       <h5 class="c-category-text " x-text="recipe.title"></h5>
-	   		    </div>
-		          <div>
-				<button class="btn c-category-edit-div" data-bs-toggle="modal" :data-bs-target="'#editModal' + recipe.id">
-					 <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-					      <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
-						<path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
-					 </svg>
-				</button>
-                      </div>
-			    <div>
-				<button class="btn c-category-remove-div" data-bs-toggle="modal" :data-bs-target="'#deleteModal' + recipe.id">
-					<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
-					     <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
-					</svg>
-				</button>
-		          </div>
-		</div>
-		@*Edit Recipe*@
-		<div class="modal fade" id="'editModal'+recipe.id" tabindex="-1">
-			<div class="modal-header">
-				<h5 class="modal-title" id="editModalLabel">Edit Recipe</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			<div class="col w-100 ">
+				<div class="card">
+					<div class="card-body d-flex justify-content-between  align-items-center">
+						<button class="btn c-category-details-div card-title" data-bs-toggle="modal" :data-bs-target="'#detailsRecipeModal' + recipe.id" x-text="recipe.title"></button >
+							
+
+						@* Buttons *@
+						<div class="text-center mt-3">
+							<div class="btn-group">
+								<button class="btn c-category-edit-div" data-bs-toggle="modal" :data-bs-target="'#editRecipeModal' + recipe.id">
+									<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+										  <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+									      <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+									 </svg>
+								</button>
+								<button class="btn c-category-remove-div" data-bs-toggle="modal" :data-bs-target="'#DeleteModal' + recipe.id">
+									<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+									    <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
+									</svg>	
+								</button>
+							</div>
+						</div>
+						
+
+						@* Delete Modal *@
+						<div class="modal fade" :id=" 'DeleteModal'+recipe.id " tabindex="-1">
+							<div class="modal-dialog">
+								<div class="modal-content text-center">
+									<form x-on:submit.prevent="await deleteRecipe(recipe); $store.recipes = await getRecipes();">
+										<div class="modal-header c-delete-modal-header"></div>
+										<div class="modal-body">
+											<svg xmlns="http://www.w3.org/2000/svg" width="65" height="70" fill="#F2D349" class="bi bi-trash3-fill c-delete-trash" viewBox="0 0 16 16">
+											    <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z" />
+										    </svg>
+											<h2 class="ps-4 c-delete-modal-title">Delete?</h2>
+										    <p class="c-delete-confirmation-text"> Are you sure you want to delete this recipe? </p>
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn c-cancel-button" data-bs-dismiss="modal">Cancel</button>
+											<button type="submit" class="btn c-confirm-button" data-bs-dismiss="modal">Delete Recipe</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+
+						
+						@*Recipe Details Modal*@
+						 <div class="modal fade modal-dialog-scrollable" :id="'detailsRecipeModal'+recipe.id" tabindex="-1">
+                                <div class="modal-dialog modal-dialog-scrollable modal-lg ">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Recipe details</h5>
+											<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <form style="text-align:left;overflow-x: hidden;overflow-y: auto;">
+                                            <div class="modal-body">
+                                                <div class="mb-3 ">
+                                                    <label for="title" class="col-2 col-form-label fw-bold " style="width : 100%; ">Title</label>
+                                                    <input id="title" readonly="readonly" class="border-0" x-model="recipe.title">
+                                                </div>
+                                                <div class="my-3 row">
+                                                    <label for="ingred" style="width : 100%; " class="col-form-label col-2 fw-bold ">Ingredients</label>
+                                                    <template x-for="ingredients in recipe.ingredients">
+                                                        <li name="ingred" x-text="ingredients"></li>
+                                                    </template>
+                                                </div>
+                                                <div class="my-3 row">
+                                                    <label for="instruc" style="width : 100%; " class="col-form-label col-2 fw-bold ">Instructions</label>
+                                                    <template x-for="instructions in recipe.instructions">
+                                                        <li name="instruc" x-text="instructions"></li>
+                                                    </template>
+                                                </div>
+                                                <div class="my-3 row">
+                                                    <label for="categ" class="col-form-label col-2 fw-bold " style="width : 100%; ">Categories</label>
+                                                    <template x-for="category in recipe.categories">
+                                                        <li name="categ" x-text="category"></li>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn c-cancel-button" data-bs-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+						@* Edit Recipe Modal *@
+						<div class="modal fade" :id="'editRecipeModal'+recipe.id" aria-hidden="true" aria-labelledby="editRecipeeModalToggleLabel" tabindex="-1">
+							<div class="modal-dialog modal-lg">
+								<div class="modal-content">
+									<form x-on:submit="await putRecipe(formatRecipe(recipe)); $store.recipes = await getRecipes();"
+										  x-data="{recipe: {id: recipe.id, title: recipe.title, ingredients: recipe.ingredients.join('\n'), instructions: recipe.instructions.join('\n'), categories: recipe.categories}, availablecategories: []}"
+										  x-effect="availablecategories = await $store.categories; ">
+										<div class="modal-header">
+											<h5 class="modal-title">Recipe Details</h5>
+											<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+										</div>
+										<div class="modal-body">
+
+											<div class="my-3 row">
+												<label for="editRecipeTitle" class="col-2 col-form-label">Title</label>
+												<div class="col-7">
+													<input id="editRecipeTitle" x-model="recipe.title" class="form-control" required />
+												</div>
+											</div>
+
+											<div class="my-3 row">
+												<label for="editRecipeIngredients" class="col-form-label col-2">Ingredients</label>
+												<div class="col-7">
+													<textarea class="form-control" x-model="recipe.ingredients" id="editRecipeIngredients" rows="5" placeholder="enter every ingredient on a separate line"></textarea>
+												</div>
+											</div>
+
+											<div class="my-3 row">
+												<label for="editRecipeInstructions" class="col-form-label col-2">Instructions</label>
+												<div class="col-7">
+													<textarea class="form-control" x-model="recipe.instructions" id="editRecipeInstructions" rows="5" placeholder="enter every instruction on a separate line"></textarea>
+												</div>
+											</div>
+
+											<div class="my-3 row">
+												<label for="editRecipeCategories" class="col-form-label col-2 ">Categories</label>
+												<div class="col-7">
+													<template x-for="category in availablecategories">
+														<div>
+															<input :id="'category'+ category + recipe.id" type="checkbox" :value="category" x-model="recipe.categories">
+															<label :for="'category'+ category + recipe.id" x-text="category"></label>
+															<br />
+														</div>
+													</template>
+												</div>
+											</div>
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn c-cancel-button" data-bs-dismiss="modal">Cancel</button>
+											<button type="submit" class="btn c-confirm-button" data-bs-dismiss="modal">Edit Recipe</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+
+				</div>
 			</div>
-			<form x-on:submit="await putRecipe(formatRecipe(recipe)); $store.recipes = await getRecipes();"
-				  x-data="{recipe: {id: recipe.id, title: recipe.title, ingredients: recipe.ingredients.join('\n'), instructions: recipe.instructions.join('\n'), categories: recipe.categories}, availablecategories: []}"
-				  x-effect="availablecategories = await $store.categories; ">
-				  <div class="modal-body c-edit-modal-body">
-					  <div class="form-group">
-						  <label for="editRecipeTitle" class="mb-2">Title</label>
-						  <div class="col-3">
-								<input id="editRecipeTitle" x-model="recipe.title" class="form-control" required />
-						  </div>
-					  </div>
-					  <div class="form-group">
-						  <label for="editRecipIng" class="mb-2">Ingredients/label>
-						  <div class="col-5">
-								<textarea class="form-control" x-model="recipe.ingredients" id="editRecipeIng" rows="5" placeholder="Enter each Ingredient on a separate line"></textarea>
-						  </div>
-					  </div>
-					   <div class="form-group">
-						  <label for="editRecipIns" class="mb-2">Ingredients/label>
-						  <div class="col-5">
-								<textarea class="form-control" x-model="recipe.instructions" id="editRecipeIns" rows="5" placeholder="Enter each Instruction on a separate line"></textarea>
-						  </div>
-					  </div>
-					  <div class="form-group">
-						  <label for="editRecipCat" class="mb-2">Categories/label>
-						  <div class="col-5">
-								<template x-for="category in availablecategories">
-									<div>
-										<input :id="'category'+ category + recipe.id" type="checkbox" :value="category" x-model="recipe.categories">
-										<label :for="'category'+ category + recipe.id" x-text="category"></label>
-										<br />
-									</div>
-								</template>
-						  </div>
-					  </div>
-				  </div>
-				  <div class="modal-footer c-modal-footer">
-					  <button type="button" class="btn c-cancel-button" data-bs-dismiss="modal" aria-label="Close"></button>
-					   <button type="submit" class="btn c-confirm-button">Confirm</button>
-				   </div>
-			</form>
-		</div>
 		</template>
 	</div>
 </div>
-@*Add Modal*@
-<div class="modal fade" id="'createModal'+recipe.id" tabindex="-1">
-			<div class="modal-header">
-				<h5 class="modal-title" id="createModalLabel">Add a Recipe</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<form x-on:submit="await postRecipe(formatRecipe(recipe)); $el.reset(); await updateDB();"
+@* Add Recipe Modal *@
+<div class="modal fade" id="createRecipeModal" tabindex="-1" aria-labelledby="createRecipeModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<form x-on:submit.prevent="await postRecipe(formatRecipe(recipe)); $el.reset(); await updateDB();"
 				  x-data="{recipe: {title: '', ingredients: '', instructions: '', categories:[]}, availablecategories: ''}"
 				  x-effect="availablecategories = await $store.categories">
-				  <div class="modal-body c-edit-modal-body">
-					  <div class="form-group">
-						  <label for="createRecipeTitle" class="mb-2">Title</label>
-						  <div class="col-3">
-								<input id="createRecipeTitle" x-model="recipe.title" class="form-control" required />
-						  </div>
-					  </div>
-					  <div class="form-group">
-						  <label for="createRecipIng" class="mb-2">Ingredients/label>
-						  <div class="col-5">
-								<textarea class="form-control" x-model="recipe.ingredients" id="createtRecipeIng" rows="5" placeholder="Enter each Ingredient on a separate line"></textarea>
-						  </div>
-					  </div>
-					   <div class="form-group">
-						  <label for="createRecipIns" class="mb-2">Ingredients/label>
-						  <div class="col-5">
-								<textarea class="form-control" x-model="recipe.instructions" id="createRecipeIns" rows="5" placeholder="Enter each Instruction on a separate line"></textarea>
-						  </div>
-					  </div>
-					  <div class="form-group">
-						  <label for="createRecipCat" class="mb-2">Categories/label>
-						  <div class="col-5">
-								<template x-for="category in availablecategories">
-									<div>
-										<input :id="'category'+ category + recipe.id" type="checkbox" :value="category" x-model="recipe.categories">
-										<label :for="'category'+ category + recipe.id" x-text="category"></label>
-										<br />
-									</div>
-								</template>
-						  </div>
-					  </div>
-				  </div>
-				  <div class="modal-footer c-modal-footer">
-					  <button type="button" class="btn c-cancel-button" data-bs-dismiss="modal" aria-label="Close"></button>
-					   <button type="submit" class="btn c-confirm-button">Confirm</button>
-				   </div>
+				<div class="modal-header">
+					<h5 class="modal-title" id="createRecipeModalLabel">What is the recipe like?</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+
+					<div class="my-3 row">
+						<label for="createRecipeTitle" class="col-2 col-form-label">Title</label>
+						<div class="col-7">
+							<input id="createRecipeTitle" x-model="recipe.title" class="form-control" required />
+						</div>
+					</div>
+
+					<div class="my-3 row">
+						<label for="createRecipeIngredients" class="col-form-label col-2">Ingredients</label>
+						<div class="col-7">
+							<textarea class="form-control" x-model="recipe.ingredients" id="createRecipeIngredients" rows="5" placeholder="enter every ingredient on a separate line"></textarea>
+						</div>
+					</div>
+
+					<div class="my-3 row">
+						<label for="createRecipeInstructions" class="col-form-label col-2">Instructions</label>
+						<div class="col-7">
+							<textarea class="form-control" x-model="recipe.instructions" id="createRecipeInstructions" rows="5" placeholder="enter every instruction on a separate line"></textarea>
+						</div>
+					</div>
+
+					<div class="my-3 row">
+						<label for="createRecipeCategories" class="col-form-label col-2 ">Categories</label>
+						<div class="col-7">
+							<template x-for="category in availablecategories">
+								<div>
+									<input :id="'category'+ category + recipe.id" type="checkbox" :value="category" x-model="recipe.categories">
+									<label :for="'category'+ category + recipe.id" x-text="category"></label>
+									<br />
+								</div>
+							</template>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+				    <button type="button" class="btn c-cancel-button" data-bs-dismiss="modal">Cancel</button>
+					<button type="submit" class="btn c-confirm-button">
+						Create recipe
+					</button>
+				</div>
 			</form>
 		</div>
+	</div>
+</div>
 
+@* Category Tab *@
+<div x-show="tab=='categories'">
+	<div class="container d-flex justify-content-between align-items-center my-4">
+		<h2>All Categories</h2>
+		<button type="button" class="btn c-Add-button" data-bs-toggle="modal" data-bs-target="#createCategoryModal">
+			Add a Category
+		</button>
+	</div>
+
+	@* Category Cards *@
+	<div class="row row-cols-auto justify-content-center g-4 mx-5 d-flex flex-column mb-3"
+		 x-data="{ categories: []}"
+		 x-effect="categories = await $store.categories;"
+		 x-cloak>
+
+		<template x-for="category in categories">
+			<div class="col">
+				<div class="card text-center">
+					<div class="card-body d-flex justify-content-between">
+						<h5 class="card-title" x-text="category"></h5>
+						<div class="btn-group">
+							<button class="btn " data-bs-toggle="modal" :data-bs-target="'#editCategoryModal' + category.replace(/\s/g, '');">
+								<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+					      <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+						<path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+					 </svg>
+							</button>
+							<button class="btn" data-bs-toggle="modal" :data-bs-target="'#deleteCategoryModal' + category.replace(/\s/g, '');">
+								<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+					     <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
+					</svg>
+							</button>
+						</div>
+					</div>
+
+					@* Edit Category Modal *@
+					<div class="modal fade" :id="'editCategoryModal' + category.replace(/\s/g, '');" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<form x-on:submit.prevent="await putCategory(oldCategory, editedCategory); await updateDB();"
+									  x-data="{oldCategory: '', editedCategory: ''}"
+									  x-effect="oldCategory=category; editedCategory=category;">
+									<div class="modal-header">
+										<h5 class="modal-title" id="editCategoryModalLabel">Edit Category</h5>
+									</div>
+									<div class="modal-body c-edit-modal-body">
+										<div class="my-3 row">
+											<label for="editCategoryTitle" class="col-2 col-form-label">Title</label>
+											<div class="col-10">
+												<input id="editCategoryTitle" x-model="editedCategory" class="form-control" required />
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn c-cancel-button" data-bs-dismiss="modal">Cancel</button>
+										<button type="submit" class="btn c-confirm-button">
+											Edit Category
+										</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+
+					@* Delete Category Modal *@
+						<div class="modal fade" :id="'deleteCategoryModal' + category.replace(/\s/g, '');" tabindex="-1" aria-labelledby="deleteCategoryModalLabel" aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content text-center">
+									<form x-on:submit.prevent="await deleteCategory(modalCategory); $el.reset(); await updateDB();"
+									  x-data="{modalCategory: ''}"
+									  x-effect="modalCategory = category">
+								    <div class="modal-header c-delete-modal-header"></div>
+								    <div class="modal-body">
+										<svg xmlns="http://www.w3.org/2000/svg" width="65" height="70" fill="#F2D349" class="bi bi-trash3-fill c-delete-trash" viewBox="0 0 16 16">
+											  <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z" />
+										 </svg>
+										<h2 class="ps-4 c-delete-modal-title">Delete?</h2>
+										    <p class="c-delete-confirmation-text"> Are you sure you want to delete this Category? </p>
+							    	</div>
+										<div class="modal-footer">
+											<button type="button" class="btn c-cancel-button" data-bs-dismiss="modal">Cancel</button>
+											<button type="submit" class="btn c-confirm-button" data-bs-dismiss="modal">Delete Category</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+		</template>
+
+	</div>
+</div>
+
+@* Add Category Modal *@
+<div class="modal fade" id="createCategoryModal" tabindex="-1" aria-labelledby="createCategoryModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<form x-on:submit.prevent="await postCategory(category); console.log($el); $el.reset(); category = ''; await updateDB();"
+				  x-data="{category: ''}">
+				<div class="modal-header">
+					<h5 class="modal-title" id="createCategoryModalLabel">Add new category</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body c-edit-modal-body">
+					<div class="my-3 row">
+						<label for="createCategoryTitle" class="col-2 col-form-label">Title</label>
+						<div class="col-10">
+							<input id="createCategoryTitle" x-model="category" class="form-control" required />
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn c-cancel-button" data-bs-dismiss="modal">Cancel</button>
+					<button type="submit" class="btn c-confirm-button">
+						Create Category
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
 
 <script type="text/javascript">
+	const baseUrl = '@Configuration["BaseUrl"]';
 	document.addEventListener('alpine:init', () => {
+		
 		Alpine.store('recipes', getRecipes());
 		Alpine.store('categories', getCategories());
 	});
-	const baseUrl = '@Configuration["BaseUrl"]';
 	async function updateDB() {
 		Alpine.store('recipes', getRecipes());
 		Alpine.store('categories', getCategories());
 	}
 	async function getRecipes() {
-		return fetch(new URL('/recipes', baseUrl).toString(), {
+        const url = new URL('recipes', baseUrl).toString();
+		
+        return fetch(url, {
 			headers: {
 				'Content-Type': 'application/json',
+				'X-XSRF-TOKEN':
+				document.getElementById("X-XSRF-TOKEN").value
 			}
 		}).then(response => response.json());
 	}
@@ -168,10 +392,12 @@
 		};
 	}
 	async function postRecipe(recipe) {
-		let response = await fetch(new URL('/recipes', baseUrl).toString(), {
+		let response = await fetch(new URL('recipes', baseUrl).toString(), {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
+				'X-XSRF-TOKEN':
+				document.getElementById("X-XSRF-TOKEN").value
 			},
 			body: JSON.stringify(recipe)
 		});
@@ -196,11 +422,14 @@
 			});
 		}
 	}
-		async function putRecipe(recipe) {
+	async function putRecipe(recipe) {
+		console.log(recipe);
 		let response = await fetch(new URL(`/recipes/${recipe.id}`, baseUrl).toString(), {
 			method: 'PUT',
 			headers: {
 				'Content-Type': 'application/json',
+				'X-XSRF-TOKEN':
+					document.getElementById("X-XSRF-TOKEN").value
 			},
 			body: JSON.stringify(recipe)
 		});
@@ -226,10 +455,12 @@
 		}
 	}
 	async function deleteRecipe(recipe) {
-		let response = await fetch(new URL(`/recipes/${recipe.id}`, baseUrl).toString(), {
+		let response = await fetch(new URL(`recipes/${recipe.id}`, baseUrl).toString(), {
 			method: 'DELETE',
 			headers: {
 				'Content-Type': 'application/json',
+				'X-XSRF-TOKEN':
+					document.getElementById("X-XSRF-TOKEN").value
 			}
 		});
 		if (response.ok) {
@@ -253,4 +484,109 @@
 			});
 		}
 	}
-	</Script>
+	async function updateRecipe(e){
+		e.preventDefault();
+		console.log(e);
+	}
+	async function getCategories() {
+		return fetch(new URL('category', baseUrl).toString(), {
+			headers: {
+				'Content-Type': 'application/json',
+				'X-XSRF-TOKEN':
+					document.getElementById("X-XSRF-TOKEN").value
+			}
+		}).then(response => response.json());
+	}
+	async function postCategory(category) {
+		let response = await fetch(new URL(`category`, baseUrl).toString(), {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'X-XSRF-TOKEN':
+					document.getElementById("X-XSRF-TOKEN").value
+			},
+			body:JSON.stringify({"CategoryName": category})
+		});
+		if (response.ok) {
+			Swal.fire({
+				text: `Successfully created category ${category}`,
+				toast: true,
+				position: 'top-end',
+				showConfirmButton: false,
+				icon: 'success',
+				timer: 1700
+			});
+		}
+		else {
+			Swal.fire({
+				text: `Failed to create category ${category}`,
+				toast: true,
+				position: 'top-end',
+				showConfirmButton: false,
+				icon: 'error',
+				timer: 1700
+			});
+		}
+	}
+	async function putCategory(category, editedCategory) {
+		let response = await fetch(new URL(`category/${category}?editedcategory=${editedCategory}`, baseUrl).toString(), {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json',
+				'X-XSRF-TOKEN':
+					document.getElementById("X-XSRF-TOKEN").value
+			}
+		});
+		if (response.ok) {
+			Swal.fire({
+				text: `Successfully edited category ${category}`,
+				toast: true,
+				position: 'top-end',
+				showConfirmButton: false,
+				icon: 'success',
+				timer: 1700
+			});
+		}
+		else {
+			Swal.fire({
+				text: `Failed to edit category ${category}`,
+				toast: true,
+				position: 'top-end',
+				showConfirmButton: false,
+				icon: 'error',
+				timer: 1700
+			});
+		}
+	}
+	async function deleteCategory(category) {
+		let response = await fetch(new URL(`/category/${category}`, baseUrl).toString(), {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json',
+				'X-XSRF-TOKEN':
+					document.getElementById("X-XSRF-TOKEN").value
+			}
+		});
+		if (response.ok) {
+			Swal.fire({
+				text: `Successfully deleted category ${category}`,
+				toast: true,
+				position: 'top-end',
+				showConfirmButton: false,
+				icon: 'success',
+				timer: 1700
+			});
+		}
+		else {
+			Swal.fire({
+				text: `Failed to delete category ${category}`,
+				toast: true,
+				position: 'top-end',
+				showConfirmButton: false,
+				icon: 'error',
+				timer: 1700
+			});
+		}
+	}
+</script>
+</body>
