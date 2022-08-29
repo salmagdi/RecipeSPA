@@ -101,7 +101,6 @@ app.MapPut("/recipes/{id}", ([FromBody] Recipe editedRecipe) =>
 {
     if (recipesList.Find(recipe => recipe.Id == editedRecipe.Id) is Recipe recipe)
     {
-
         recipesList.Remove(recipe);
         recipesList.Add(editedRecipe);
         recipesList = recipesList.OrderBy(o => o.Title).ToList();
@@ -113,6 +112,7 @@ app.MapPut("/recipes/{id}", ([FromBody] Recipe editedRecipe) =>
 
 app.MapGet("/category", () =>
 {
+    categoriesList.Sort();
     return Results.Ok(categoriesList);
 });
 
@@ -124,7 +124,7 @@ app.MapPost("/category", ([FromBody] Category category) =>
     return Results.Created($"/recipes/{category}", category);
 });
 
-app.MapDelete("/category", (string category) =>
+app.MapDelete("/category/{category}", ([FromRoute(Name = "category")] string category) =>
 {
     for (int i = 0; i < categoriesList.Count; ++i)
     {
@@ -142,7 +142,7 @@ app.MapDelete("/category", (string category) =>
     return Results.NotFound();
 });
 
-app.MapPut("/category", (string oldCategory, string editedCategory) =>
+app.MapPut("/category/{oldCategory}", ([FromRoute(Name = "oldCategory")] string oldCategory, string editedCategory) =>
 {
     for (int i = 0; i < categoriesList.Count; ++i)
     {
@@ -166,4 +166,4 @@ void Save()
     File.WriteAllText(jsonFile, JsonConvert.SerializeObject(recipesList));
     File.WriteAllText(jsonFileCategory, JsonConvert.SerializeObject(categoriesList));
 }
-app.Run(); // Now we're done and the API is ready to run
+app.Run();

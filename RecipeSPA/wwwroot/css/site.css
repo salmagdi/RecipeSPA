@@ -110,7 +110,12 @@ body {
     cursor: pointer;
     color: black;
 }
-
+.category-title {
+    margin-right: 5%;
+    margin-left: 4%;
+    padding-right: 3px;
+    margin-top:1%;
+}
 
 .c-category-remove-div:hover {
     cursor: pointer;
@@ -128,14 +133,10 @@ body {
     color: #F2D349;
 }
 
-
 .recipe-title {
     color: #000000;
     font-weight:500;
 }
-.recipe-title:hover {
-        color: #F2D349;
- }
 
 .recipe-ing-ins {
     color: #7f2e4d;
@@ -152,55 +153,18 @@ body {
 .c-cancel-button {
     background-color: none;
     border-radius: 40px;
-    border-color: #F2D349;
+    border-color: #5C6E58;
 }
 
 .c-confirm-button {
     border-radius: 40px;
     color: white;
-    background-color: #F2D349;
+    background-color: #5C6E58;
 }
-
-
-
-
 
 .c-categories-container-recipe {
     text-align: start;
     font-size: 15px;
-}
-
-.c-recipe-page {
-    background-color: whitesmoke;
-    height: 100%;
-    padding: 0px;
-    color: #3d0633
-}
-
-
-.c-categories-container-recipe {
-    text-align: start;
-    font-size: 15px;
-}
-
-
-
-
-.c-category-btn {
-    border-radius: 25px;
-    font-weight: 800
-}
-
-.c-recipe-details-page {
-    background-color: whitesmoke;
-    height: 100%;
-    min-height: 95vh;
-    padding: 0px;
-}
-
-.c-recipe-container {
-    display: flex;
-    height: 100%;
 }
 
 .c-text-container {
@@ -260,7 +224,7 @@ c-delete-modal-title-recipe {
 
 .c-delete-trash {
     border-radius: 50%;
-    border-color: #F2D349;
+    border-color: #5C6E58;
     border-style: solid;
     width: 70px;
     text-align: center

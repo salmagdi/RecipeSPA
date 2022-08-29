@@ -33,7 +33,7 @@
 			<div class="col w-100 ">
 				<div class="card">
 					<div class="card-body d-flex justify-content-between  align-items-center">
-						<button class="btn c-category-details-div card-title" data-bs-toggle="modal" :data-bs-target="'#detailsRecipeModal' + recipe.id" x-text="recipe.title"></button >
+						<button class="btn c-category-details-div recipe-title" style="font-size:larger;" data-bs-toggle="modal" :data-bs-target="'#detailsRecipeModal' + recipe.id" x-text="recipe.title"></button >
 							
 
 						@* Buttons *@
@@ -58,10 +58,10 @@
 						<div class="modal fade" :id=" 'DeleteModal'+recipe.id " tabindex="-1">
 							<div class="modal-dialog">
 								<div class="modal-content text-center">
-									<form x-on:submit.prevent="await deleteRecipe(recipe); $store.recipes = await getRecipes();">
+									<form x-on:submit="await deleteRecipe(recipe).preventDefault; $store.recipes = await getRecipes();">
 										<div class="modal-header c-delete-modal-header"></div>
 										<div class="modal-body">
-											<svg xmlns="http://www.w3.org/2000/svg" width="65" height="70" fill="#F2D349" class="bi bi-trash3-fill c-delete-trash" viewBox="0 0 16 16">
+											<svg xmlns="http://www.w3.org/2000/svg" width="65" height="70" fill="#5C6E58" class="bi bi-trash3-fill c-delete-trash" viewBox="0 0 16 16">
 											    <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z" />
 										    </svg>
 											<h2 class="ps-4 c-delete-modal-title">Delete?</h2>
@@ -122,7 +122,7 @@
 						<div class="modal fade" :id="'editRecipeModal'+recipe.id" aria-hidden="true" aria-labelledby="editRecipeeModalToggleLabel" tabindex="-1">
 							<div class="modal-dialog modal-lg">
 								<div class="modal-content">
-									<form x-on:submit="await putRecipe(formatRecipe(recipe)); $store.recipes = await getRecipes();"
+									<form x-on:submit="await putRecipe(formatRecipe(recipe)).preventDefault; $store.recipes = await getRecipes();"
 										  x-data="{recipe: {id: recipe.id, title: recipe.title, ingredients: recipe.ingredients.join('\n'), instructions: recipe.instructions.join('\n'), categories: recipe.categories}, availablecategories: []}"
 										  x-effect="availablecategories = await $store.categories; ">
 										<div class="modal-header">
@@ -183,7 +183,7 @@
 <div class="modal fade" id="createRecipeModal" tabindex="-1" aria-labelledby="createRecipeModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
-			<form x-on:submit.prevent="await postRecipe(formatRecipe(recipe)); $el.reset(); await updateDB();"
+			<form x-on:submit="await postRecipe(formatRecipe(recipe)).preventDefault; $el.reset(); await updateDB();"
 				  x-data="{recipe: {title: '', ingredients: '', instructions: '', categories:[]}, availablecategories: ''}"
 				  x-effect="availablecategories = await $store.categories">
 				<div class="modal-header">
@@ -228,8 +228,7 @@
 				</div>
 				<div class="modal-footer">
 				    <button type="button" class="btn c-cancel-button" data-bs-dismiss="modal">Cancel</button>
-					<button type="submit" class="btn c-confirm-button">
-						Create recipe
+					<button type="submit" class="btn c-confirm-button" data-bs-dismiss="modal">Create recipe
 					</button>
 				</div>
 			</form>
@@ -256,7 +255,7 @@
 			<div class="col">
 				<div class="card text-center">
 					<div class="card-body d-flex justify-content-between">
-						<h5 class="card-title" x-text="category"></h5>
+						<h5 class="card-title recipe-title category-title" style="font-size:larger;" x-text="category"></h5>
 						<div class="btn-group">
 							<button class="btn " data-bs-toggle="modal" :data-bs-target="'#editCategoryModal' + category.replace(/\s/g, '');">
 								<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
@@ -276,7 +275,7 @@
 					<div class="modal fade" :id="'editCategoryModal' + category.replace(/\s/g, '');" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
 						<div class="modal-dialog">
 							<div class="modal-content">
-								<form x-on:submit.prevent="await putCategory(oldCategory, editedCategory); await updateDB();"
+								<form x-on:submit="await putCategory(oldCategory, editedCategory).preventDefault; await updateDB();"
 									  x-data="{oldCategory: '', editedCategory: ''}"
 									  x-effect="oldCategory=category; editedCategory=category;">
 									<div class="modal-header">
@@ -305,12 +304,12 @@
 						<div class="modal fade" :id="'deleteCategoryModal' + category.replace(/\s/g, '');" tabindex="-1" aria-labelledby="deleteCategoryModalLabel" aria-hidden="true">
 							<div class="modal-dialog">
 								<div class="modal-content text-center">
-									<form x-on:submit.prevent="await deleteCategory(modalCategory); $el.reset(); await updateDB();"
+									<form x-on:submit="await deleteCategory(modalCategory).preventDefault; $el.reset(); await updateDB();"
 									  x-data="{modalCategory: ''}"
 									  x-effect="modalCategory = category">
 								    <div class="modal-header c-delete-modal-header"></div>
 								    <div class="modal-body">
-										<svg xmlns="http://www.w3.org/2000/svg" width="65" height="70" fill="#F2D349" class="bi bi-trash3-fill c-delete-trash" viewBox="0 0 16 16">
+										<svg xmlns="http://www.w3.org/2000/svg" width="65" height="70" fill="#5C6E58" class="bi bi-trash3-fill c-delete-trash" viewBox="0 0 16 16">
 											  <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z" />
 										 </svg>
 										<h2 class="ps-4 c-delete-modal-title">Delete?</h2>
@@ -335,7 +334,7 @@
 <div class="modal fade" id="createCategoryModal" tabindex="-1" aria-labelledby="createCategoryModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
-			<form x-on:submit.prevent="await postCategory(category); console.log($el); $el.reset(); category = ''; await updateDB();"
+			<form x-on:submit="await postCategory(category).preventDefault; console.log($el); $el.reset(); category = ''; await updateDB();"
 				  x-data="{category: ''}">
 				<div class="modal-header">
 					<h5 class="modal-title" id="createCategoryModalLabel">Add new category</h5>
@@ -359,7 +358,7 @@
 		</div>
 	</div>
 </div>
-
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script type="text/javascript">
 	const baseUrl = '@Configuration["BaseUrl"]';
 	document.addEventListener('alpine:init', () => {
@@ -378,7 +377,17 @@
 			headers: {
 				'Content-Type': 'application/json',
 				'X-XSRF-TOKEN':
-				document.getElementById("X-XSRF-TOKEN").value
+					document.getElementById("X-XSRF-TOKEN").value
+			}
+		}).then(response => response.json());
+	}
+
+	async function getCategories() {
+		return fetch(new URL('category', baseUrl).toString(), {
+			headers: {
+				'Content-Type': 'application/json',
+				'X-XSRF-TOKEN':
+					document.getElementById("X-XSRF-TOKEN").value
 			}
 		}).then(response => response.json());
 	}
@@ -397,12 +406,13 @@
 			headers: {
 				'Content-Type': 'application/json',
 				'X-XSRF-TOKEN':
-				document.getElementById("X-XSRF-TOKEN").value
+					document.getElementById("X-XSRF-TOKEN").value
 			},
 			body: JSON.stringify(recipe)
 		});
+
 		if (response.ok) {
-			Swal.fire({
+			swal.fire({
 				text: `Successfully created recipe ${recipe.title}`,
 				toast: true,
 				position: 'top-end',
@@ -421,81 +431,6 @@
 				timer: 1700
 			});
 		}
-	}
-	async function putRecipe(recipe) {
-		console.log(recipe);
-		let response = await fetch(new URL(`/recipes/${recipe.id}`, baseUrl).toString(), {
-			method: 'PUT',
-			headers: {
-				'Content-Type': 'application/json',
-				'X-XSRF-TOKEN':
-					document.getElementById("X-XSRF-TOKEN").value
-			},
-			body: JSON.stringify(recipe)
-		});
-		if (response.ok) {
-			Swal.fire({
-				text: `Successfully edited recipe ${recipe.title}`,
-				toast: true,
-				position: 'top-end',
-				showConfirmButton: false,
-				icon: 'success',
-				timer: 1700
-			});
-		}
-		else {
-			Swal.fire({
-				text: `Failed to edit recipe ${recipe.title}`,
-				toast: true,
-				position: 'top-end',
-				showConfirmButton: false,
-				icon: 'error',
-				timer: 1700
-			});
-		}
-	}
-	async function deleteRecipe(recipe) {
-		let response = await fetch(new URL(`recipes/${recipe.id}`, baseUrl).toString(), {
-			method: 'DELETE',
-			headers: {
-				'Content-Type': 'application/json',
-				'X-XSRF-TOKEN':
-					document.getElementById("X-XSRF-TOKEN").value
-			}
-		});
-		if (response.ok) {
-			Swal.fire({
-				text: `Successfully deleted recipe ${recipe.title}`,
-				toast: true,
-				position: 'top-end',
-				showConfirmButton: false,
-				icon: 'success',
-				timer: 1700
-			});
-		}
-		else {
-			Swal.fire({
-				text: `Failed to delete recipe ${recipe.title}`,
-				toast: true,
-				position: 'top-end',
-				showConfirmButton: false,
-				icon: 'error',
-				timer: 1700
-			});
-		}
-	}
-	async function updateRecipe(e){
-		e.preventDefault();
-		console.log(e);
-	}
-	async function getCategories() {
-		return fetch(new URL('category', baseUrl).toString(), {
-			headers: {
-				'Content-Type': 'application/json',
-				'X-XSRF-TOKEN':
-					document.getElementById("X-XSRF-TOKEN").value
-			}
-		}).then(response => response.json());
 	}
 	async function postCategory(category) {
 		let response = await fetch(new URL(`category`, baseUrl).toString(), {
@@ -528,6 +463,39 @@
 			});
 		}
 	}
+
+	async function putRecipe(recipe) {
+		let response = await fetch(new URL(`/recipes/${recipe.id}`, baseUrl).toString(), {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json',
+				'X-XSRF-TOKEN':
+					document.getElementById("X-XSRF-TOKEN").value
+			},
+			body: JSON.stringify(recipe)
+		});
+		
+		if (response.ok) {
+			Swal.fire({
+				text: `Successfully edited recipe ${recipe.title}`,
+				toast: true,
+				position: 'top-end',
+				showConfirmButton: false,
+				icon: 'success',
+				timer: 1700
+			});
+		}
+		else {
+			Swal.fire({
+				text: `Failed to edit recipe ${recipe.title}`,
+				toast: true,
+				position: 'top-end',
+				showConfirmButton: false,
+				icon: 'error',
+				timer: 1700
+			});
+		}
+	}
 	async function putCategory(category, editedCategory) {
 		let response = await fetch(new URL(`category/${category}?editedcategory=${editedCategory}`, baseUrl).toString(), {
 			method: 'PUT',
@@ -537,6 +505,7 @@
 					document.getElementById("X-XSRF-TOKEN").value
 			}
 		});
+
 		if (response.ok) {
 			Swal.fire({
 				text: `Successfully edited category ${category}`,
@@ -558,6 +527,37 @@
 			});
 		}
 	}
+	async function deleteRecipe(recipe) {
+		let response = await fetch(new URL(`recipes/${recipe.id}`, baseUrl).toString(), {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json',
+				'X-XSRF-TOKEN':
+					document.getElementById("X-XSRF-TOKEN").value
+			}
+		});
+
+		if (response.ok) {
+			Swal.fire({
+				text: `Successfully deleted recipe ${recipe.title}`,
+				toast: true,
+				position: 'top-end',
+				showConfirmButton: false,
+				icon: 'success',
+				timer: 1700
+			});
+		}
+		else {
+			Swal.fire({
+				text: `Failed to delete recipe ${recipe.title}`,
+				toast: true,
+				position: 'top-end',
+				showConfirmButton: false,
+				icon: 'error',
+				timer: 1700
+			});
+		}
+	}
 	async function deleteCategory(category) {
 		let response = await fetch(new URL(`/category/${category}`, baseUrl).toString(), {
 			method: 'DELETE',
@@ -567,6 +567,7 @@
 					document.getElementById("X-XSRF-TOKEN").value
 			}
 		});
+
 		if (response.ok) {
 			Swal.fire({
 				text: `Successfully deleted category ${category}`,
